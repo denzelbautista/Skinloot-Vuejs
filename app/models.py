@@ -1,7 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from config.local import config
 import uuid
-from datetime import datetime
 from flask_login import login_user,login_required,current_user,LoginManager,UserMixin, logout_user
 
 db = SQLAlchemy()
