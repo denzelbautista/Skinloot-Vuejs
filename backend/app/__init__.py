@@ -216,4 +216,104 @@ def create_app(test_config=None):
             return jsonify({'success':False,'message':str(e)})
         finally:
             db.session.close()
+
+    @app.route('/comprar-skin/<user_id>',methods=['POST'])
+    def comprar_skin(user_id):
+        returned_code = 201
+        list_errors = []
+        try:
+            body = request.json
+            if 'skin_uid' not in body:
+                list_errors.append('skin_uid is required')
+            else:
+                skin_uid = body.get('skin_uid')
+            if 'seller_uid' not in body:
+                list_errors.append('seller_uid is required')
+            else:
+                seller_uid = body.get('seller_uid')
+            if 'price' not in body:
+                list_errors.append('price is required')
+            else:
+                price = body.get('price')
+            if 'post_id' not in body:
+                list_errors.append('post_id is required')
+            else:
+                post_id = body.get('post_id')
+
+            if len(list_errors)>0:
+                returned_code = 400
+            else:
+                posteo = Postventa.query.filter_by(id=post_id).first()
+                usuario = User.query.filter_by(id=user_id).first()
+                if usuario.saldo == None or usuario.saldo == 0:
+                    return jsonify({'success':False,'message':'wallet = 0'})
+                elif usuario.saldo < int(price):
+                    return jsonify({'success':False,'message':'insufficiente amount of money'})
+                else:
+                    price = int(price)
+                    comision = price * 0.05
+                    usuario.saldo -= price
+
+                    seller = User.query.filter_by(id=seller_uid).first()
+                    seller.saldo += (price - comision)
+
+                    filename_seller = f'{seller_uid}.txt'
+                    filepath_seller = os.path.join(f"{app.config['UPLOAD_FOLDER']}/{seller_uid}",filename_seller)
+
+                    with open(filepath_seller,'r') as file:
+                        contenido = file.readlines()
+
+                    contenido = [linea for linea in contenido if linea.strip() != skin_uid]
+                    file.close()
+
+                    with open(filepath_seller,'w') as file:
+                        file.writelines(contenido)
+                    file.close()
+
+                    filename_user = f'{user_id}.txt'
+                    filepath_user = os.path.join(f"{app.config['UPLOAD_FOLDER']}/{user_id}",filename_user)
+
+                    with open(filepath_user,'a') as file:
+                        file.write(str(skin_uid)+'\n')
+                    file.close()
+
+                    boleta = Transaccion(price,comision,user_id,seller_uid,skin_uid)
+
+                    skin = Skin.query.filter_by(id=skin_uid).first()
+                    skin.user_id = usuario.id
+
+                    posteo.ons_sale = False
+
+                    db.session.add(boleta)
+                    db.session.commit()
+                    return jsonify({'success':True,'boleta id':boleta.id})
+        except Exception as e:
+            return jsonify({'success':False,'message':str(e)})
+        finally:
+            db.session.close()
+
+    @app.route('/users/<user_id>/<user_saldo>', methods=['PATCH'])
+    def update_user_saldo(user_id,user_saldo):
+        returned_code = 200
+        list_errors = []
+        try:
+            user = User.query.filter_by(id=user_id).first()
+            
+            user.saldo += int(user_saldo)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            returned_code = 500
+            return jsonify({'success':False,'message':str(e)})
+        finally:
+            db.session.close()
+        if len(list_errors) > 0:
+            returned_code = 400
+            return jsonify({'success':False,'message':'Error updating employee','errors':list_errors}),returned_code
+        elif returned_code != 200:
+            abort(returned_code)
+        else:
+            return jsonify({"success":True,'message':'User is updated successfully!'}),returned_code
+
+
     return app
