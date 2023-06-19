@@ -207,7 +207,7 @@ def create_app(test_config=None):
                 skin = Skin.query.get(skin_id)
                 if not skin:
                     return jsonify({'success':False,'message':'Skin not found'})
-                postventa = Postventa(title,user_id,name,skin_id,champion,skin_image,on_sale,int(price))
+                postventa = Postventa(title,user_id,skin_id,on_sale,int(price),champion,skin_image,name)
                 db.session.add(postventa)
                 db.session.commit()
 
