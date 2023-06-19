@@ -39,13 +39,15 @@ def create_app(test_config=None):
             body = request.json
 
             if 'nickname' not in body:
-                list_errors.append('nickname')
+                list_errors.append('nickname is required')
             else:
-                nickname = body.get('nickname is required')
+                nickname = body.get('nickname')
+
             if 'e_mail' not in body:
                 list_errors.append('e_mail is required')
             else:
                 e_mail = body.get('e_mail')
+
             if 'password' not in body:
                 list_errors.append('password is required')
             else:
@@ -70,11 +72,17 @@ def create_app(test_config=None):
 
                 user_id = user.id
 
+                #image_dir = os.path.join("static/image/persona.jpg")
+                image_dir = "static/image/persona.jpg"
+                user.image = image_dir
+                db.session.commit()
+                login_user(user)
         except Exception as e:
             print(e)
             print(sys.exc_info())
             db.session.rollback()
             returned_code = 500
+            return jsonify({"success":False,"message":str(e)})
         finally:
             db.session.close()
 
@@ -86,46 +94,60 @@ def create_app(test_config=None):
             return jsonify({'success': True, 'message': 'User created successfully!', 'user_id': user_id}), returned_code
     
     @app.route('/skins', methods=['POST'])
-    @login_required
     def register_skins():
         returned_code = 201
         list_errors = []
         try:
             body = request.json
             if 'name' not in body:
-                list_errors.append('name')
+                list_errors.append('name is required')
             else:
-                name = body.get("name is required")
+                name = body.get("name")
             if 'champion_name' not in body:
-                list_errors.append('champion_name')
+                list_errors.append('champion_name is required')
             else:
-                champion_name = body.get("champion_name is required")
+                champion_name = body.get("champion_name")
             if 'rarity' not in body:
-                list_errors.append('rarity')
+                list_errors.append('rarity is required')
             else:
-                rarity = body.get('rarity is required')
+                rarity = body.get('rarity')
             if 'user_id' not in body:
-                list_errors.append('user_id')
+                list_errors.append("user_id is required")
             else:
-                user_id.append('user_id is required')
-            
+                user_id = body.get("user_id")
+
             if len(list_errors) > 0:
                 returned_code = 400
             else:
                 skin = Skin(name,champion_name,rarity,user_id)
                 db.session.add(skin)
                 db.session.commit()
+                uid = skin.id
+
+                filename = f'{user_id}.txt'
+                filepath = os.path.join(f"{app.config['UPLOAD_FOLDER']}/{user_id}",filename)
+
+                with open(filepath,'a') as file:
+                    file.write(str(uid) + '\n')
+                file.close()
+
+            db.session.commit()
         except Exception as e:
             db.session.rollback()
             return jsonify({'success':False,'error':str(e)})
         finally:
             db.session.close()
+        if returned_code == 400:
+            return jsonify({'success':False,'message':"Error creating skin",'errors':list_errors}),returned_code
+        elif returned_code != 201:
+            abort(returned_code)
+        else:
+            return jsonify({'success':True,'message':"skin created successfully!",'skin_id':uid}),returned_code
 
-    @app.route('/show-skins-current',methods=['GET'])
-    @login_required
-    def current_skins():
+    @app.route('/show-skins-current/<user_id>',methods=['GET'])
+    def current_skins(user_id):
         try:
-            skins = Skin.query.filter_by(user_id=current_user.id).all()
+            skins = Skin.query.filter_by(user_id=user_id).all()
             skins_serialized = [skin.serialize() for skin in skins]
             return jsonify({'success':True,"serialize":skins_serialized})
         except Exception as e:
@@ -143,7 +165,7 @@ def create_app(test_config=None):
     @app.route('/show-skins',methods=['GET'])
     def showSkins():
         try:
-            skins = Skin.query.all()\
+            skins = Skin.query.all()
             skins_serialized = [skin.serialize() for skin in skins]
             return jsonify({'success':True,'skins':skins_serialized})
         except Exception as e:
@@ -157,25 +179,25 @@ def create_app(test_config=None):
         try:
             body = request.json
             if 'title' not in body:
-                list_errors.append('title')
+                list_errors.append('title is required')
             else:
-                title = body.get('title is required')
+                title = body.get('title')
             if 'skin_id' not in body:
-                list_errors.append('skin_id')
+                list_errors.append('skin_id is required')
             else:
-                skin_id = body.get('skin_id is required')
+                skin_id = body.get('skin_id')
             if 'name' not in body:
-                list_errors.append('name')
+                list_errors.append('name is required')
             else:
-                name = body.get('name is required')
+                name = body.get('name')
             if 'price' not in body:
-                list_errors.append('price')
+                list_errors.append('price is required')
             else:
-                price = body.get('price is required')
+                price = body.get('price')
             if 'champion' not in body:
-                list_errors.append('champion')
+                list_errors.append('champion is required')
             else:
-                champion = body.get('champion is required')
+                champion = body.get('champion')
             
             if len(list_errors) > 0:
                 returned_code = 400

@@ -1,3 +1,3 @@
 config = {
-    'DATABASE_URI': 'postgresql://postgres:1234@localhost:5432/skinloot',
+    'DATABASE_URI': 'postgresql://postgres:230204@localhost:5432/skinloot',
 }
