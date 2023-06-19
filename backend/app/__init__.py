@@ -171,9 +171,8 @@ def create_app(test_config=None):
         except Exception as e:
             return jsonify({'success':False,'error':str(e)})
 
-    @app.route('/post-venta',methods=['POST'])
-    @login_required
-    def create_postventa():
+    @app.route('/post-venta/<user_id>',methods=['POST'])
+    def create_postventa(user_id):
         returned_code = 201
         list_errors = []
         try:
@@ -202,8 +201,8 @@ def create_app(test_config=None):
             if len(list_errors) > 0:
                 returned_code = 400
             else:
-                user_id = current_user.id
-                skin_image = os.path.join("static/campeones",f'{champion}',f'{nombre}.jpg')
+                user_id = user_id
+                skin_image = os.path.join("static/campeones",f'{champion}',f'{name}.jpg')
                 on_sale = True
                 skin = Skin.query.get(skin_id)
                 if not skin:
