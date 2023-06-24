@@ -82,7 +82,6 @@ def create_app(test_config=None):
             print(sys.exc_info())
             db.session.rollback()
             returned_code = 500
-            return jsonify({"success": False, "message": str(e)})
         finally:
             db.session.close()
 
@@ -363,5 +362,26 @@ def create_app(test_config=None):
             abort(returned_code)
         else:
             return jsonify({"success": True, 'message': 'User is updated successfully!'}), returned_code
+
+    @app.errorhandler(405)
+    def method_not_allowed(error):
+        return jsonify({
+            'success': False,
+            'message': 'Method not allowed'
+        }), 405
+
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            'success': False,
+            'message': 'Resource not found'
+        }), 404
+
+    @app.errorhandler(500)
+    def internal_server_error(error):
+        return jsonify({
+            'success': False,
+            'message': 'Internal Server error'
+        }), 500
 
     return app

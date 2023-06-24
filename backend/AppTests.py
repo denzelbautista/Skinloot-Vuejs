@@ -15,7 +15,13 @@ class SkinlootTests(unittest.TestCase):
 
         self.new_user = {
             'nickname': 'test',
-            'e_mail': 'test@gmail.com',
+            'e_mail': 'test342@gmail.com',
+            'password':  '1234'
+        }
+
+        self.new_invalid_user = {
+            'nickname': None,
+            'e_mail': '',
             'password':  '1234'
         }
 
@@ -27,6 +33,22 @@ class SkinlootTests(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['user']['id'])
+
+    def test_create_user_failed_400(self):
+        response = self.client.post('/users', json={})
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+
+    def test_create_user_failed_500(self):
+        response = self.client.post('/users', json=self.new_invalid_user)
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
 
     def tearDown(self):
         pass
