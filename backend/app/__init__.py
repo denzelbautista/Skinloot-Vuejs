@@ -134,6 +134,32 @@ def create_app(test_config=None):
         else:
             return jsonify({'success': True, 'message': 'User updated successfully!', 'id': user_id}), returned_code
 
+    @app.route('/users/<user_id>', methods=['DELETE'])
+    def delete_user(user_id):
+        returned_code = 200
+        try:
+
+            user = User.query.get(user_id)
+            if user is None:
+                returned_code = 404
+            else:
+
+                db.session.delete(user)
+                db.session.commit()
+
+        except Exception as e:
+            print(e)
+            print(sys.exc_info())
+            db.session.rollback()
+            returned_code = 500
+        finally:
+            db.session.close()
+
+        if returned_code != 200:
+            abort(returned_code)
+        else:
+            return jsonify({'success': True, 'message': 'User deleted successfully!'}), returned_code
+
     @app.route('/skins', methods=['POST'])
     def register_skins():
         returned_code = 201

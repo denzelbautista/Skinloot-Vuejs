@@ -4,7 +4,14 @@ from app.models import User, Skin
 from app import create_app
 from flask_sqlalchemy import SQLAlchemy
 import json
+import random
+import string
 import io as io
+
+
+def random_email(char_num):
+    return ''.join(random.choice(string.ascii_lowercase)
+                   for _ in range(char_num)) + "@gmail.com"
 
 
 class SkinlootTests(unittest.TestCase):
@@ -15,7 +22,7 @@ class SkinlootTests(unittest.TestCase):
 
         self.new_user = {
             'nickname': 'test',
-            'e_mail': 'test342@gmail.com',
+            'e_mail': random_email(7),
             'password':  '1234'
         }
 
@@ -33,6 +40,7 @@ class SkinlootTests(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['user']['id'])
+        self.user_id = data['user']['id']
 
     def test_create_user_failed_400(self):
         response = self.client.post('/users', json={})
