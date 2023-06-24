@@ -106,10 +106,11 @@ def create_app(test_config=None):
             else:
 
                 body = request.json
-
-                user.nickname = body['nickname']
-
+                new_nick = body.get('nickname')
                 balance = body.get('balance')
+
+                if new_nick:
+                    user.nickname = body['nickname']
 
                 if balance:
                     if user.saldo is not None:
