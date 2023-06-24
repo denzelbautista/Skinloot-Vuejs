@@ -32,6 +32,13 @@ class SkinlootTests(unittest.TestCase):
             'password':  '1234'
         }
 
+        self.new_skin = {
+            'name': 'Gragas_camorrista',
+            'champion_name': 'Gragas',
+            'rarity': 'Normal',
+            'user_id': ' '
+        }
+
     # Users
     def test_create_user_success(self):
         response = self.client.post('/users', json=self.new_user)
@@ -57,6 +64,20 @@ class SkinlootTests(unittest.TestCase):
         self.assertEqual(response.status_code, 500)
         self.assertEqual(data['success'], False)
         self.assertTrue(data['message'])
+
+    # Skins
+    def test_create_skin_success(self):
+        response_dpto_tmp = self.client.post('/users', json=self.new_user)
+        data_tmp = json.loads(response_dpto_tmp.data)
+        dpto_tmp_id = data_tmp['user']['id']
+        self.new_skin['user_id'] = str(dpto_tmp_id)
+
+        response = self.client.post('/skins', json=self.new_skin)
+        data = json.loads(response.data)
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['skin_id'])
 
     def tearDown(self):
         pass
