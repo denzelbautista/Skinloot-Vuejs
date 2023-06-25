@@ -199,7 +199,11 @@ def create_app(test_config=None):
                     file.write(str(uid) + '\n')
                 file.close()
 
-            db.session.commit()
+                db.session.commit()
+                db.session.close()
+                skin = db.session.merge(skin)
+                skin.serialize()
+
         except Exception as e:
             print(e)
             print(sys.exc_info())
@@ -214,7 +218,7 @@ def create_app(test_config=None):
         elif returned_code != 201:
             abort(returned_code)
         else:
-            return jsonify({'success': True, 'message': "skin created successfully!", 'skin_id': uid}), returned_code
+            return jsonify({'success': True, 'message': "skin created successfully!", 'skin': skin.serialize()}), returned_code
 
     @app.route('/skins/<user_id>', methods=['GET'])
     def current_skins(user_id):

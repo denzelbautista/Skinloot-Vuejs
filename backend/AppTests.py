@@ -46,6 +46,14 @@ class SkinlootTests(unittest.TestCase):
             'user_id': '615sd5sas6515c15as-as5da1s5d5as'
         }
 
+        self.new_post = {
+            'title': 'TestPost',
+            'skin_id': ' ',
+            'name': 'Gragas_camorrista',
+            'champion': 'Gragas',
+            'price': '19'
+        }
+
     # Users
     def test_create_user_success(self):
         response = self.client.post('/users', json=self.new_user)
@@ -54,7 +62,6 @@ class SkinlootTests(unittest.TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['user']['id'])
-        self.user_id = data['user']['id']
 
     def test_create_user_failed_400(self):
         response = self.client.post('/users', json={})
@@ -74,17 +81,17 @@ class SkinlootTests(unittest.TestCase):
 
     # Skins
     def test_create_skin_success(self):
-        response_dpto_tmp = self.client.post('/users', json=self.new_user)
-        data_tmp = json.loads(response_dpto_tmp.data)
-        dpto_tmp_id = data_tmp['user']['id']
-        self.new_skin['user_id'] = str(dpto_tmp_id)
+        response_user_temp = self.client.post('/users', json=self.new_user)
+        data_tmp = json.loads(response_user_temp.data)
+        user_temp_id = data_tmp['user']['id']
+        self.new_skin['user_id'] = str(user_temp_id)
 
         response = self.client.post('/skins', json=self.new_skin)
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(data['success'], True)
-        self.assertTrue(data['skin_id'])
+        self.assertTrue(data['skin']['id'])
 
     def test_create_skin_failed_400(self):
         response = self.client.post('/skins', json={})
@@ -100,6 +107,26 @@ class SkinlootTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 500)
         self.assertEqual(data['success'], False)
+        self.assertTrue(data['message'])
+
+    # Posts
+
+    def test_create_post_success(self):
+        response_user_temp = self.client.post('/users', json=self.new_user)
+        data_tmp = json.loads(response_user_temp.data)
+        user_temp_id = data_tmp['user']['id']
+        self.new_skin['user_id'] = str(user_temp_id)
+
+        response_skin_tmp = self.client.post('/skins', json=self.new_skin)
+        data_skin_tmp = json.loads(response_skin_tmp.data)
+        skin_tmp_id = data_skin_tmp['skin']['id']
+        self.new_post['skin_id'] = str(skin_tmp_id)
+
+        response = self.client.post(
+            '/post/{}'.format(user_temp_id), json=self.new_post)
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(data['success'], True)
         self.assertTrue(data['message'])
 
     def tearDown(self):
