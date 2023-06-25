@@ -201,10 +201,14 @@ def create_app(test_config=None):
 
             db.session.commit()
         except Exception as e:
+            print(e)
+            print(sys.exc_info())
             db.session.rollback()
-            return jsonify({'success': False, 'error': str(e)})
+            returned_code = 500
+
         finally:
             db.session.close()
+
         if returned_code == 400:
             return jsonify({'success': False, 'message': "Error creating skin", 'errors': list_errors}), returned_code
         elif returned_code != 201:
@@ -212,7 +216,7 @@ def create_app(test_config=None):
         else:
             return jsonify({'success': True, 'message': "skin created successfully!", 'skin_id': uid}), returned_code
 
-    @app.route('/show-skins-current/<user_id>', methods=['GET'])
+    @app.route('/skins/<user_id>', methods=['GET'])
     def current_skins(user_id):
         try:
             skins = Skin.query.filter_by(user_id=user_id).all()
@@ -239,53 +243,72 @@ def create_app(test_config=None):
         except Exception as e:
             return jsonify({'success': False, 'error': str(e)})
 
-    @app.route('/post-venta/<user_id>', methods=['POST'])
+    @app.route('/post/<user_id>', methods=['POST'])
     def create_postventa(user_id):
         returned_code = 201
         list_errors = []
         try:
-            body = request.json
-            if 'title' not in body:
-                list_errors.append('title is required')
-            else:
-                title = body.get('title')
-            if 'skin_id' not in body:
-                list_errors.append('skin_id is required')
-            else:
-                skin_id = body.get('skin_id')
-            if 'name' not in body:
-                list_errors.append('name is required')
-            else:
-                name = body.get('name')
-            if 'price' not in body:
-                list_errors.append('price is required')
-            else:
-                price = body.get('price')
-            if 'champion' not in body:
-                list_errors.append('champion is required')
-            else:
-                champion = body.get('champion')
 
-            if len(list_errors) > 0:
-                returned_code = 400
+            user = User.query.filter_by(id=user_id).first()
+            if not user:
+                returned_code = 404
             else:
-                user_id = user_id
-                skin_image = os.path.join(
-                    "static/campeones", f'{champion}', f'{name}.jpg')
-                on_sale = True
-                skin = Skin.query.get(skin_id)
-                if not skin:
-                    return jsonify({'success': False, 'message': 'Skin not found'})
-                postventa = Postventa(title, user_id, skin_id, on_sale, int(
-                    price), champion, skin_image, name)
-                db.session.add(postventa)
-                db.session.commit()
 
-                return jsonify({'success': True, 'title': title, 'user_id': user_id, 'skin_id': skin_id, 'champion': champion, 'skin_image': skin_image, 'on_sale': on_sale})
+                body = request.json
+                if 'title' not in body:
+                    list_errors.append('title is required')
+                else:
+                    title = body.get('title')
+                if 'skin_id' not in body:
+                    list_errors.append('skin_id is required')
+                else:
+                    skin_id = body.get('skin_id')
+                if 'name' not in body:
+                    list_errors.append('name is required')
+                else:
+                    name = body.get('name')
+                if 'price' not in body:
+                    list_errors.append('price is required')
+                else:
+                    price = body.get('price')
+                if 'champion' not in body:
+                    list_errors.append('champion is required')
+                else:
+                    champion = body.get('champion')
+
+                if len(list_errors) > 0:
+                    returned_code = 400
+                else:
+                    skin_image = os.path.join(
+                        "static/campeones", f'{champion}', f'{name}.jpg')
+                    on_sale = True
+                    skin = Skin.query.get(skin_id)
+                    if not skin:
+                        returned_code = 404
+                    else:
+                        postventa = Postventa(title, user_id, skin_id, on_sale, int(
+                            price), champion, skin_image, name)
+                        db.session.add(postventa)
+                        db.session.commit()
+                        db.session.close()  # cerramos la sesión después del commit
+                        # reasociamos la instancia a una nueva sesión
+                        postventa = db.session.merge(postventa)
+                        postventa.serialize()  # llamamos al método serialize sin error
+
         except Exception as e:
-            return jsonify({'success': False, 'message': str(e)})
+            print(sys.exc_info())
+            db.session.rollback()
+            returned_code = 500
+
         finally:
             db.session.close()
+
+        if returned_code == 400:
+            return jsonify({'success': False, 'message': 'Error creating Post', 'errors': list_errors}), returned_code
+        elif returned_code != 201:
+            abort(returned_code)
+        else:
+            return jsonify({'success': True, 'message': 'Post created successfully!', 'post': postventa.serialize()}), returned_code
 
     @app.route('/comprar-skin/<user_id>', methods=['POST'])
     def comprar_skin(user_id):
