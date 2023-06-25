@@ -238,8 +238,8 @@ def create_app(test_config=None):
         except Exception as e:
             return jsonify({'success': False, 'error': str(e)})
 
-    @app.route('/show-skins', methods=['GET'])
-    def showSkins():
+    @app.route('/skins', methods=['GET'])
+    def get_skins():
         try:
             skins = Skin.query.all()
             skins_serialized = [skin.serialize() for skin in skins]
@@ -314,7 +314,7 @@ def create_app(test_config=None):
         else:
             return jsonify({'success': True, 'message': 'Post created successfully!', 'post': postventa.serialize()}), returned_code
 
-    @app.route('/comprar-skin/<user_id>', methods=['POST'])
+    @app.route('/users/<user_id>/skins', methods=['POST'])
     def comprar_skin(user_id):
         returned_code = 201
         list_errors = []
@@ -387,11 +387,21 @@ def create_app(test_config=None):
 
                     db.session.add(boleta)
                     db.session.commit()
-                    return jsonify({'success': True, 'boleta id': boleta.id})
+
         except Exception as e:
-            return jsonify({'success': False, 'message': str(e)})
+            print(e)
+            print(sys.exc_info())
+            db.session.rollback()
+            returned_code = 500
         finally:
             db.session.close()
+
+        if returned_code == 400:
+            return jsonify({'success': False, 'message': 'Error buying skin', 'errors': list_errors}), returned_code
+        elif returned_code != 201:
+            abort(returned_code)
+        else:
+            return jsonify({'success': True, 'message': 'Skin sold successfully!'}), returned_code
 
     @app.route('/users/<user_id>/<user_saldo>', methods=['PATCH'])
     def update_user_saldo(user_id, user_saldo):
