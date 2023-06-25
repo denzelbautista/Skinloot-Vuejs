@@ -221,7 +221,7 @@ def create_app(test_config=None):
             return jsonify({'success': True, 'message': "skin created successfully!", 'skin': skin.serialize()}), returned_code
 
     @app.route('/skins/<user_id>', methods=['GET'])
-    def current_skins(user_id):
+    def user_skins(user_id):
         try:
             skins = Skin.query.filter_by(user_id=user_id).all()
             skins_serialized = [skin.serialize() for skin in skins]
@@ -247,7 +247,7 @@ def create_app(test_config=None):
         except Exception as e:
             return jsonify({'success': False, 'error': str(e)})
 
-    @app.route('/post/<user_id>', methods=['POST'])
+    @app.route('/posts/<user_id>', methods=['POST'])
     def create_postventa(user_id):
         returned_code = 201
         list_errors = []
