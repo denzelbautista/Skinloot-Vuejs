@@ -277,30 +277,6 @@ def create_app(test_config=None):
         else:
             return jsonify({'success': True, 'message': 'Skin sold successfully!'}), returned_code
 
-    @app.route('/users/<user_id>/<user_saldo>', methods=['PATCH'])
-    @authorize
-    def update_user_saldo(user_id, user_saldo):
-        returned_code = 200
-        list_errors = []
-        try:
-            user = User.query.filter_by(id=user_id).first()
-
-            user.saldo += int(user_saldo)
-            db.session.commit()
-        except Exception as e:
-            db.session.rollback()
-            returned_code = 500
-            return jsonify({'success': False, 'message': str(e)})
-        finally:
-            db.session.close()
-        if len(list_errors) > 0:
-            returned_code = 400
-            return jsonify({'success': False, 'message': 'Error updating employee', 'errors': list_errors}), returned_code
-        elif returned_code != 200:
-            abort(returned_code)
-        else:
-            return jsonify({"success": True, 'message': 'User is updated successfully!'}), returned_code
-
     @app.errorhandler(405)
     def method_not_allowed(error):
         return jsonify({
