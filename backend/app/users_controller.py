@@ -12,6 +12,7 @@ import os
 
 from .models import User
 from config.local import config
+from .authentication import authorize
 
 users_bp = Blueprint('/users', __name__)
 
@@ -94,6 +95,46 @@ def register_user():
             'token': token,
             'id': user_created_id,
         }), returned_code
+
+@users_bp.route('/users/<user_id>', methods=['PATCH'])
+@authorize
+def update_user(user_id):
+    returned_code = 200
+    list_errors = []
+    try:
+
+        user = User.query.get(user_id)
+
+        if not user:
+            returned_code = 404
+        else:
+
+            body = request.json
+            new_nick = body.get('nickname')
+            balance = body.get('balance')
+
+            if new_nick:
+                user.nickname = body['nickname']
+
+            if balance:
+                if user.saldo is not None:
+                    user.saldo += int(balance)
+                else:
+                    user.saldo = int(balance)
+
+            user_created_id = user.insert()
+                
+
+    except Exception as e:
+        print(sys.exc_info())
+        returned_code = 500
+
+    if returned_code == 400:
+        return jsonify({'success': False, 'message': 'Error updating user'}), returned_code
+    elif returned_code != 200:
+        abort(returned_code)
+    else:
+        return jsonify({'success': True, 'message': 'User updated successfully!', 'id': user_created_id}), returned_code
 
 
 
