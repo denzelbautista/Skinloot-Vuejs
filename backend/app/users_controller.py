@@ -137,7 +137,26 @@ def update_user(user_id):
         return jsonify({'success': True, 'message': 'User updated successfully!', 'id': user_created_id}), returned_code
 
 
+@users_bp.route('/users/<user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    returned_code = 200   
 
+    try:
+        user = User.query.get(user_id) 
+        if user is None:
+            returned_code = 404
+
+        user.delete()
+    except Exception as e:
+        print('\te: ', e)
+        returned_code = 500
+
+    if returned_code != 200:
+        abort(returned_code)
+    else:
+        return jsonify({
+            'success': True
+        })
 
     
 

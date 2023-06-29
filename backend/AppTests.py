@@ -13,24 +13,15 @@ def random_email(char_num):
     return ''.join(random.choice(string.ascii_lowercase)
                    for _ in range(char_num)) + "@gmail.com"
 
+def random_username(char_num):
+    return ''.join(random.choice(string.ascii_lowercase)
+                   for _ in range(char_num))
 
 class SkinlootTests(unittest.TestCase):
     def setUp(self):
         database_path = config['DATABASE_URI']
         self.app = create_app({'database_path': database_path})
         self.client = self.app.test_client()
-
-        self.new_user = {
-            'nickname': 'test',
-            'e_mail': random_email(7),
-            'password':  '1234'
-        }
-
-        self.new_c_user = {
-            'nickname': 'shopperuser',
-            'e_mail': random_email(7),
-            'password':  '12345'
-        }
 
         self.add_c_user_cash = {
             'balance' : '50'
@@ -79,40 +70,46 @@ class SkinlootTests(unittest.TestCase):
             'post_id': ' ',
         }
 
+        self.new_authenticated_user = {
+            'nickname': random_username(10),
+            'e_mail': random_email(7),
+            'password': '147258369',
+            'confirmationPassword': '147258369'
+        }
 
-    # Users
-    def test_create_user_success(self):
-        response = self.client.post('/users', json=self.new_user)
-        data = json.loads(response.data)
+        self.new_c_user = {
+            'nickname': random_username(10),
+            'e_mail': random_email(7),
+            'password': '147258369',
+            'confirmationPassword': '147258369'
+        }
 
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(data['success'], True)
-        self.assertTrue(data['id'])
+        response_user = self.client.post(
+            '/users', json=self.new_authenticated_user)
+        data_user = json.loads(response_user.data)
+        self.user_valid_token = data_user['token']
+        self.user_created_id = data_user['id']
 
-    def test_create_user_failed_400(self):
-        response = self.client.post('/users', json={})
-        data = json.loads(response.data)
+        self.headers = {
+            "content-type": 'application/json'
+        }
 
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(data['success'], False)
-        self.assertTrue(data['message'])
+        response_user_c = self.client.post(
+            '/users', json=self.new_c_user)
+        data_user_c = json.loads(response_user_c.data)
+        self.user_c_valid_token = data_user_c['token']
+        self.user_c_created_id = data_user_c['id']
 
-    def test_create_user_failed_500(self):
-        response = self.client.post('/users', json=self.new_invalid_user)
-        data = json.loads(response.data)
-
-        self.assertEqual(response.status_code, 500)
-        self.assertEqual(data['success'], False)
-        self.assertTrue(data['message'])
+        self.headers_c = {
+            "content-type": 'application/json'
+        }
 
     # Skins
     def test_create_skin_success(self):
-        response_user_temp = self.client.post('/users', json=self.new_user)
-        data_tmp = json.loads(response_user_temp.data)
-        user_temp_id = data_tmp['id']
-        self.new_skin['user_id'] = str(user_temp_id)
-
-        response = self.client.post('/skins', json=self.new_skin)
+        self.headers['X-ACCESS-TOKEN'] = self.user_valid_token
+        self.new_skin['user_id'] = str(self.user_created_id)
+        
+        response = self.client.post('/skins', json=self.new_skin, headers=self.headers)
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 201)
@@ -120,7 +117,8 @@ class SkinlootTests(unittest.TestCase):
         self.assertTrue(data['skin']['id'])
 
     def test_create_skin_failed_400(self):
-        response = self.client.post('/skins', json={})
+        self.headers['X-ACCESS-TOKEN'] = self.user_valid_token
+        response = self.client.post('/skins', json={}, headers=self.headers)
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 400)
@@ -128,7 +126,8 @@ class SkinlootTests(unittest.TestCase):
         self.assertTrue(data['message'])
 
     def test_create_skin_failed_500(self):
-        response = self.client.post('/skins', json=self.new_skin_failed)
+        self.headers['X-ACCESS-TOKEN'] = self.user_valid_token
+        response = self.client.post('/skins', json=self.new_skin_failed, headers=self.headers)
         data = json.loads(response.data)
 
         self.assertEqual(response.status_code, 500)
@@ -137,54 +136,42 @@ class SkinlootTests(unittest.TestCase):
 
     # Posts
     def test_create_post_success(self):
-        response_user_temp = self.client.post('/users', json=self.new_user)
-        data_tmp = json.loads(response_user_temp.data)
-        user_temp_id = data_tmp['id']
-        self.new_skin['user_id'] = str(user_temp_id)
+        self.headers['X-ACCESS-TOKEN'] = self.user_valid_token
+        self.new_skin['user_id'] = str(self.user_created_id)
 
-        response_skin_tmp = self.client.post('/skins', json=self.new_skin)
+        response_skin_tmp = self.client.post('/skins', json=self.new_skin, headers=self.headers)
         data_skin_tmp = json.loads(response_skin_tmp.data)
         skin_tmp_id = data_skin_tmp['skin']['id']
         self.new_post['skin_id'] = str(skin_tmp_id)
 
         response = self.client.post(
-            '/posts/{}'.format(user_temp_id), json=self.new_post)
+            '/posts/{}'.format(self.user_created_id), json=self.new_post, headers=self.headers)
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(data['success'], True)
         self.assertTrue(data['message'])
     
     def test_create_post_failed_400(self):
-        response_user_temp = self.client.post('/users', json=self.new_user)
-        data_tmp = json.loads(response_user_temp.data)
-        user_temp_id = data_tmp['id']
-        self.new_skin['user_id'] = str(user_temp_id)
-
-        response_skin_tmp = self.client.post('/skins', json=self.new_skin)
-        data_skin_tmp = json.loads(response_skin_tmp.data)
-        skin_tmp_id = data_skin_tmp['skin']['id']
-        self.new_post['skin_id'] = str(skin_tmp_id)
+        self.headers['X-ACCESS-TOKEN'] = self.user_valid_token
 
         response = self.client.post(
-            '/posts/{}'.format(user_temp_id), json={})
+            '/posts/{}'.format(self.user_created_id), json={}, headers=self.headers)
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 400)
         self.assertEqual(data['success'], False)
         self.assertTrue(data['message'])
 
     def test_create_post_failed_500(self):
-        response_user_temp = self.client.post('/users', json=self.new_user)
-        data_tmp = json.loads(response_user_temp.data)
-        user_temp_id = data_tmp['id']
-        self.new_skin['user_id'] = str(user_temp_id)
+        self.headers['X-ACCESS-TOKEN'] = self.user_valid_token
+        self.new_skin['user_id'] = str(self.user_created_id)
 
-        response_skin_tmp = self.client.post('/skins', json=self.new_skin)
+        response_skin_tmp = self.client.post('/skins', json=self.new_skin, headers=self.headers)
         data_skin_tmp = json.loads(response_skin_tmp.data)
         skin_tmp_id = data_skin_tmp['skin']['id']
         self.new_invalid_post['skin_id'] = str(skin_tmp_id)
 
         response = self.client.post(
-            '/posts/{}'.format(user_temp_id), json=self.new_invalid_post)
+            '/posts/{}'.format(self.user_created_id), json=self.new_invalid_post, headers=self.headers)
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 500)
         self.assertEqual(data['success'], False)
@@ -192,34 +179,30 @@ class SkinlootTests(unittest.TestCase):
     
     # Sells
     def test_buy_skin_success(self):
-        response_user_c_temp = self.client.post('/users', json=self.new_c_user)
-        data_c_tmp = json.loads(response_user_c_temp.data)
-        user_c_temp_id = data_c_tmp['id']
+        self.headers_c['X-ACCESS-TOKEN'] = self.user_c_valid_token
+        self.headers['X-ACCESS-TOKEN'] = self.user_valid_token
 
         # vamos a usar patch para agregar saldo al user_c
-        response_new_cash = self.client.patch('/users/{}'.format(user_c_temp_id), json=self.add_c_user_cash)
+        response_new_cash = self.client.patch('/users/{}'.format(self.user_c_created_id), json=self.add_c_user_cash, headers=self.headers_c)
         data_new_cash = json.loads(response_new_cash.data)
         user_c_new_cash_id = data_new_cash['id']
 
-        response_user_temp = self.client.post('/users', json=self.new_user)
-        data_tmp = json.loads(response_user_temp.data)
-        user_temp_id = data_tmp['id']
-        self.new_skin['user_id'] = str(user_temp_id)
-        self.new_sell['seller_uid'] = str(user_temp_id)
+        self.new_skin['user_id'] = str(self.user_created_id)
+        self.new_sell['seller_uid'] = str(self.user_created_id)
 
-        response_skin_tmp = self.client.post('/skins', json=self.new_skin)
+        response_skin_tmp = self.client.post('/skins', json=self.new_skin, headers=self.headers)
         data_skin_tmp = json.loads(response_skin_tmp.data)
         skin_tmp_id = data_skin_tmp['skin']['id']
         self.new_post['skin_id'] = str(skin_tmp_id)
         self.new_sell['skin_uid'] = str(skin_tmp_id)
 
         response_post_tmp = self.client.post(
-            '/posts/{}'.format(user_temp_id), json=self.new_post)
+            '/posts/{}'.format(self.user_created_id), json=self.new_post, headers=self.headers)
         data_post_tmp = json.loads(response_post_tmp.data)
         post_tmp_id = data_post_tmp['post']['id']
         self.new_sell['post_id'] = str(post_tmp_id)
 
-        response = self.client.post('/users/{}/skins'.format(user_c_new_cash_id), json=self.new_sell)
+        response = self.client.post('/users/{}/skins'.format(user_c_new_cash_id), json=self.new_sell, headers=self.headers_c)
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 201)
         self.assertEqual(data['success'], True)
@@ -227,4 +210,5 @@ class SkinlootTests(unittest.TestCase):
     
 
     def tearDown(self):
-        pass
+        self.client.delete('/users/{}'.format(self.user_created_id))
+        self.client.delete('/users/{}'.format(self.user_c_created_id))

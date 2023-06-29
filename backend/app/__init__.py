@@ -30,6 +30,7 @@ def create_app(test_config=None):
         return response
 
     @app.route('/skins', methods=['POST'])
+    @authorize
     def register_skins():
         returned_code = 201
         list_errors = []
@@ -90,6 +91,7 @@ def create_app(test_config=None):
             return jsonify({'success': True, 'message': "skin created successfully!", 'skin': skin.serialize()}), returned_code
 
     @app.route('/skins/<user_id>', methods=['GET'])
+    @authorize
     def user_skins(user_id):
         try:
             skins = Skin.query.filter_by(user_id=user_id).all()
@@ -99,6 +101,7 @@ def create_app(test_config=None):
             return jsonify({'success': False, "error": str(e)})
 
     @app.route('/show-posts', methods=['GET'])
+    @authorize
     def showPosts():
         try:
             posts = Postventa.query.filter_by(on_sale=True).all()
@@ -108,7 +111,7 @@ def create_app(test_config=None):
             return jsonify({'success': False, 'error': str(e)})
 
     @app.route('/skins', methods=['GET'])
-    def get_skins():
+    def get_all_db_skins():
         try:
             skins = Skin.query.all()
             skins_serialized = [skin.serialize() for skin in skins]
@@ -117,12 +120,13 @@ def create_app(test_config=None):
             return jsonify({'success': False, 'error': str(e)})
 
     @app.route('/posts/<user_id>', methods=['POST'])
+    @authorize
     def create_postventa(user_id):
         returned_code = 201
         list_errors = []
         try:
 
-            user = User.query.filter_by(id=user_id).first()
+            user = User.query.filter(User.id == user_id).first()
             if not user:
                 returned_code = 404
             else:
@@ -184,6 +188,7 @@ def create_app(test_config=None):
             return jsonify({'success': True, 'message': 'Post created successfully!', 'post': postventa.serialize()}), returned_code
 
     @app.route('/users/<user_id>/skins', methods=['POST'])
+    @authorize
     def comprar_skin(user_id):
         returned_code = 201
         list_errors = []
@@ -252,7 +257,7 @@ def create_app(test_config=None):
                     skin = Skin.query.filter_by(id=skin_uid).first()
                     skin.user_id = usuario.id
 
-                    posteo.ons_sale = False
+                    posteo.on_sale = False
 
                     db.session.add(boleta)
                     db.session.commit()
@@ -273,6 +278,7 @@ def create_app(test_config=None):
             return jsonify({'success': True, 'message': 'Skin sold successfully!'}), returned_code
 
     @app.route('/users/<user_id>/<user_saldo>', methods=['PATCH'])
+    @authorize
     def update_user_saldo(user_id, user_saldo):
         returned_code = 200
         list_errors = []
