@@ -87,7 +87,7 @@ class SkinlootTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 201)
         self.assertEqual(data['success'], True)
-        self.assertTrue(data['user']['id'])
+        self.assertTrue(data['id'])
 
     def test_create_user_failed_400(self):
         response = self.client.post('/users', json={})
@@ -109,7 +109,7 @@ class SkinlootTests(unittest.TestCase):
     def test_create_skin_success(self):
         response_user_temp = self.client.post('/users', json=self.new_user)
         data_tmp = json.loads(response_user_temp.data)
-        user_temp_id = data_tmp['user']['id']
+        user_temp_id = data_tmp['id']
         self.new_skin['user_id'] = str(user_temp_id)
 
         response = self.client.post('/skins', json=self.new_skin)
@@ -139,7 +139,7 @@ class SkinlootTests(unittest.TestCase):
     def test_create_post_success(self):
         response_user_temp = self.client.post('/users', json=self.new_user)
         data_tmp = json.loads(response_user_temp.data)
-        user_temp_id = data_tmp['user']['id']
+        user_temp_id = data_tmp['id']
         self.new_skin['user_id'] = str(user_temp_id)
 
         response_skin_tmp = self.client.post('/skins', json=self.new_skin)
@@ -157,7 +157,7 @@ class SkinlootTests(unittest.TestCase):
     def test_create_post_failed_400(self):
         response_user_temp = self.client.post('/users', json=self.new_user)
         data_tmp = json.loads(response_user_temp.data)
-        user_temp_id = data_tmp['user']['id']
+        user_temp_id = data_tmp['id']
         self.new_skin['user_id'] = str(user_temp_id)
 
         response_skin_tmp = self.client.post('/skins', json=self.new_skin)
@@ -175,7 +175,7 @@ class SkinlootTests(unittest.TestCase):
     def test_create_post_failed_500(self):
         response_user_temp = self.client.post('/users', json=self.new_user)
         data_tmp = json.loads(response_user_temp.data)
-        user_temp_id = data_tmp['user']['id']
+        user_temp_id = data_tmp['id']
         self.new_skin['user_id'] = str(user_temp_id)
 
         response_skin_tmp = self.client.post('/skins', json=self.new_skin)
@@ -194,7 +194,7 @@ class SkinlootTests(unittest.TestCase):
     def test_buy_skin_success(self):
         response_user_c_temp = self.client.post('/users', json=self.new_c_user)
         data_c_tmp = json.loads(response_user_c_temp.data)
-        user_c_temp_id = data_c_tmp['user']['id']
+        user_c_temp_id = data_c_tmp['id']
 
         # vamos a usar patch para agregar saldo al user_c
         response_new_cash = self.client.patch('/users/{}'.format(user_c_temp_id), json=self.add_c_user_cash)
@@ -203,7 +203,7 @@ class SkinlootTests(unittest.TestCase):
 
         response_user_temp = self.client.post('/users', json=self.new_user)
         data_tmp = json.loads(response_user_temp.data)
-        user_temp_id = data_tmp['user']['id']
+        user_temp_id = data_tmp['id']
         self.new_skin['user_id'] = str(user_temp_id)
         self.new_sell['seller_uid'] = str(user_temp_id)
 

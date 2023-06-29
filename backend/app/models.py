@@ -1,7 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
 from config.local import config
 import uuid
-from flask_login import login_user,login_required,current_user,LoginManager,UserMixin, logout_user
+from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+import sys
 
 db = SQLAlchemy()
 
@@ -38,21 +40,35 @@ class Skin(db.Model):
             'user_id' : self.user_id
         }
 
-class User(UserMixin,db.Model):
+class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.String(36),primary_key=True,default=lambda: str(uuid.uuid4()), server_default=db.text("uuid_generate_v4()"))
     nickname = db.Column(db.String(100),unique=False,nullable=False)
     skins_hashes = db.Column(db.String(100),unique=False,nullable=True)
     e_mail = db.Column(db.String(100),unique=True,nullable=False)
-    password = db.Column(db.String(100),unique=False,nullable=False)
+    password_hash = db.Column(db.String(400),unique=False,nullable=False)
     saldo = db.Column(db.Integer,nullable=True,server_default='0')
     created_at = db.Column(db.DateTime(timezone=True), nullable=False, server_default=db.text("now()"))
     image = db.Column(db.String(500),nullable=True)
+
+    @property
+    def password(self):
+        raise AttributeError('Password is not readable')
+    
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+
+    def verify_password(self, password):
+        return check_password_hash(self.password_hash, password)
 
     def __init__(self,nickname,e_mail,password):
         self.nickname = nickname
         self.e_mail = e_mail    
         self.password = password
+        self.created_at = datetime.utcnow()
+
     
     def get_id(self):
         return self.id
@@ -61,12 +77,23 @@ class User(UserMixin,db.Model):
         return{
             'id': self.id,
             'nickname' : self.nickname,
-            'skins_hashes': self.skins_hashes,
             'e_mail' : self.e_mail,
-            'password' : self.password,
-            'saldo' : self.saldo,
-            'image' : self.image,
+            'saldo' : self.saldo
         }
+    
+    def insert(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+            user_created_id = self.id
+        except Exception as e:
+            print(sys.exc_info())
+            print('e: ', e)
+            db.session.rollback()
+        finally:
+            db.session.close()
+        
+        return user_created_id
 
 class Postventa(db.Model):
     __tablename__ = 'postventa'
