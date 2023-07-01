@@ -9,7 +9,6 @@ from .authentication import authorize
 
 
 import os
-import jwt
 import sys
 
 
@@ -19,14 +18,14 @@ def create_app(test_config=None):
         app.config['UPLOAD_FOLDER'] = 'static/usuarios'
         app.register_blueprint(users_bp)
         setup_db(app, test_config['database_path'] if test_config else None)
-        CORS(app, origins='*')
+        CORS(app, origins=['http://localhost:8080'])
 
     @app.after_request
     def after_request(response):
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
         response.headers.add('Access-Control-Allow-Methods',
                              'GET,PATCH,POST,DELETE,OPTIONS')
-        response.headers.add(' Access-Control-Max-Age', '10')
+        response.headers.add('Access-Control-Max-Age', '10')
         return response
 
     @app.route('/skins', methods=['POST'])
