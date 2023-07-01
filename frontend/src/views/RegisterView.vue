@@ -43,7 +43,7 @@ export default {
   },
   methods: {
     async registerUserEvent() {
-      const { errors = [] } = await registerUser(this.user);
+      await registerUser(this.user);
     },
   },
 };
