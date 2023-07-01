@@ -43,12 +43,7 @@ export default {
   },
   methods: {
     async registerUserEvent() {
-      const { success, errors = [] } = await registerUser(this.user);
-      if (success) {
-        this.isUserSubmitted = true;
-      } else {
-        this.errorLists = errors;
-      }
+      const { errors = [] } = await registerUser(this.user);
     },
   },
 };
