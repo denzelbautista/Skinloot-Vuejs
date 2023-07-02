@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1>Sign Up!</h1>
-    <div v-if="!isUserSubmitted">
+    <h1>Register User!</h1>
+    <div>
       <form @submit.prevent.stop="registerUserEvent">
         <div>
           <label>Username:</label>
@@ -37,8 +37,6 @@ export default {
         password: "",
         confirmationPassword: "",
       },
-      errorLists: [],
-      isUserSubmitted: false,
     };
   },
   methods: {

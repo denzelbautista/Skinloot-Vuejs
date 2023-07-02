@@ -1,5 +1,13 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <RegisterUserSkin />
 </template>
+
+<script>
+import RegisterUserSkin from "@/components/RegisterSkin.vue";
+export default {
+  name: "AddSkinView",
+  components: {
+    RegisterUserSkin,
+  },
+};
+</script>
