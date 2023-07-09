@@ -35,6 +35,7 @@ def create_app(test_config=None):
         list_errors = []
         try:
             body = request.json
+
             if 'name' not in body:
                 list_errors.append('name is required')
             else:

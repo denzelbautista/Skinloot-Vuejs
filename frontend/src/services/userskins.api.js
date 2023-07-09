@@ -2,19 +2,19 @@ import axios from "axios";
 
 const BASE_URL = "http://127.0.0.1:5002/skins";
 
-export const registerSkin = async (skin) => {
+export const registerSkin = async (skin, token) => {
   try {
-    const { data } = await axios.post(BASE_URL, skin, {
+    const response = await axios.post(BASE_URL, skin, {
       headers: {
-        "content-type": "application/json",
-        // Agrega el token en el encabezado Authorization
+        "Content-Type": "application/json",
+        "X-ACCESS-TOKEN": token, // Agrega el token en el encabezado de la solicitud
       },
     });
-
+    const data = response.data;
     console.log("data: ", data);
-
     return data;
   } catch (error) {
-    console.log("error here: ", error);
+    console.log("error: ", error);
+    throw error;
   }
 };
