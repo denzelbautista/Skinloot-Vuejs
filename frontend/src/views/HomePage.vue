@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="homepage">
     <button class="menu"><b>Log In</b></button>
     <div class="jumbotron">
       <div class="container-fluid text-center">
@@ -67,6 +67,10 @@ export default {
   background-size: cover;
   padding-top: 10%;
   padding-bottom: 10%;
+}
+
+.homepage {
+  background-color: black;
 }
 
 #how-it-works {

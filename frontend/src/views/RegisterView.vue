@@ -1,23 +1,27 @@
 <template>
-  <div class="registerview">
-    <h1 class="skinloot">Register</h1>
+  <div class="register-view">
+    <h1 class="title">Register</h1>
     <div class="form-container">
       <form class="registration-form" @submit.prevent.stop="registerUserEvent">
         <div class="form-group">
-          <label>Username:</label>
-          <input type="text" v-model="user.nickname" />
+          <label for="username">Username:</label>
+          <input type="text" id="username" v-model="user.nickname" />
         </div>
         <div class="form-group">
-          <label>Email:</label>
-          <input type="text" v-model="user.e_mail" />
+          <label for="email">Email:</label>
+          <input type="text" id="email" v-model="user.e_mail" />
         </div>
         <div class="form-group">
-          <label>Password:</label>
-          <input type="password" v-model="user.password" />
+          <label for="password">Password:</label>
+          <input type="password" id="password" v-model="user.password" />
         </div>
         <div class="form-group">
-          <label>Confirmation Password:</label>
-          <input type="password" v-model="user.confirmationPassword" />
+          <label for="confirm-password">Confirmation Password:</label>
+          <input
+            type="password"
+            id="confirm-password"
+            v-model="user.confirmationPassword"
+          />
         </div>
         <button class="submit-button" type="submit">Submit</button>
       </form>
@@ -27,8 +31,9 @@
 
 <script>
 import { registerUser } from "@/services/users.api";
+
 export default {
-  name: "RegisterUser",
+  name: "RegisterView",
   data() {
     return {
       user: {
@@ -47,8 +52,8 @@ export default {
 };
 </script>
 
-<style>
-.registerview {
+<style scoped>
+.register-view {
   background: url("https://media.giphy.com/media/U8VG8SfKICqkPjq4Sl/giphy.gif")
       no-repeat 90% center fixed,
     url("https://media.giphy.com/media/U8VG8SfKICqkPjq4Sl/giphy.gif") no-repeat
@@ -56,67 +61,63 @@ export default {
   background-size: auto 40%;
   background-color: rgb(0, 0, 0);
   color: rgb(207, 0, 0);
+  height: 100vh; /* Ajusta la altura al 100% de la ventana */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.skinloot {
+.title {
   font-weight: none;
   font-size: 100px;
   font-family: "Times New Roman", Times, serif;
   color: #ff0000;
+  margin-bottom: 20px;
 }
 
 .form-container {
-  /*background-color: #000000; /* es el contrno*/
   padding: 20px;
   border-radius: 8px;
+  width: 30%; /* Ajusta el ancho del formulario según tus preferencias */
 }
 
+.registration-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
 .registration-form label {
-  display: block;
   margin-bottom: 10px;
   color: rgb(207, 0, 0); /* los nicks y eso*/
   font-weight: bold;
 }
 
-.registration-form input[type="text"],
-.registration-form input[type="email"],
-.registration-form input[type="password"] {
-  width: 100%;
+input[type="text"],
+input[type="email"],
+input[type="password"] {
   padding: 10px;
-  margin-bottom: 20px;
-  background-color: #2c2c2c;
-  color: rgb(0, 0, 0);
-  border: none;
-  border-radius: 4px; /* los inputs*/
+  background-color: #333333;
   color: white;
+  border: none;
+  border-radius: 4px;
+  box-sizing: 100%;
 }
 
-.skinloot {
-  text-align: center;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-}
-
-.registration-form input[type="submit"] {
-  width: 100%;
+.submit-button {
   padding: 10px;
   background-color: rgb(207, 0, 0);
-  color: #000000; /* el submit*/
-  border: #383838;
+  color: #000000;
+  border: none;
   border-radius: 9px;
   cursor: pointer;
   font-weight: bold;
 }
 
-.registration-form input[type="submit"]:hover {
+.submit-button:hover {
   background-color: darkred;
-}
-
-.logo {
-  width: 100%;
-  max-width: 1000px; /* Ajusta el tamaño máximo de la imagen según tus preferencias */
-  display: block;
-  margin: 0 auto; /* Centra la imagen horizontalmente */
-  border-radius: 10000px;
-  border: #ff0303;
 }
 </style>
