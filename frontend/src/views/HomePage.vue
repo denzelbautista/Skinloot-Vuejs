@@ -40,7 +40,9 @@
       </div>
     </div>
     <div>
-      <button class="Register_now">Register Now</button>
+      <button class="Register_now" @click="redirectToRegister">
+        Register Now
+      </button>
     </div>
   </div>
 </template>
@@ -48,11 +50,15 @@
 <script>
 export default {
   name: "HomePage",
-  methods: {},
+  methods: {
+    redirectToRegister() {
+      this.$router.push({ name: "register" });
+    },
+  },
 };
 </script>
 
-<style>
+<style scoped>
 @import url("https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css");
 
 .jumbotron {
