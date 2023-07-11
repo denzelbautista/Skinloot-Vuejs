@@ -47,6 +47,7 @@ export default {
   methods: {
     async registerUserEvent() {
       await registerUser(this.user);
+      this.$router.push({ name: "market" });
     },
   },
 };
@@ -61,7 +62,7 @@ export default {
   background-size: auto 40%;
   background-color: rgb(0, 0, 0);
   color: rgb(207, 0, 0);
-  height: 100vh; /* Ajusta la altura al 100% de la ventana */
+  height: 96.7vh; /* Ajusta la altura al 100% de la ventana */
   display: flex;
   flex-direction: column;
   align-items: center;

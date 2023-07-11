@@ -91,7 +91,7 @@ export default {
 .page-container {
   background: linear-gradient(to bottom, #2e0909, #240606, #170000);
   width: 100%;
-  height: 100%;
+  height: 96.7vh;
   margin: 0;
   padding: 0;
   overflow-x: hidden;

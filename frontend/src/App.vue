@@ -6,4 +6,8 @@
   </div>
 </template>
 
-<style></style>
+<style>
+#app {
+  background-color: black;
+}
+</style>
