@@ -69,6 +69,20 @@ class User(db.Model):
         self.password = password
         self.created_at = datetime.utcnow()
 
+    @classmethod
+    def authenticate(cls, **kwargs):
+        e_mail = kwargs.get('e_mail')
+        password_hash = kwargs.get('password_hash')
+        
+        if not e_mail or not password_hash:
+            return None
+
+        user = cls.query.filter_by(e_mail=e_mail).first()
+        if not user or not check_password_hash(user.password, password_hash):
+            return None
+
+        return user
+
     
     def get_id(self):
         return self.id
