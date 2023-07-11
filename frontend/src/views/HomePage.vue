@@ -1,6 +1,6 @@
 <template>
   <div class="homepage">
-    <button class="menu"><b>Log In</b></button>
+    <button class="menu" @click="redirectToLogin"><b>Log In</b></button>
     <div class="jumbotron">
       <div class="container-fluid text-center">
         <h1 class="display-3 text-white fw-bold">Skinloot</h1>
@@ -53,6 +53,9 @@ export default {
   methods: {
     redirectToRegister() {
       this.$router.push({ name: "register" });
+    },
+    redirectToLogin() {
+      this.$router.push({ name: "login" });
     },
   },
 };

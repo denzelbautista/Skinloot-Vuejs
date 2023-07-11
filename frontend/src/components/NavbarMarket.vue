@@ -17,6 +17,7 @@
               src="@/assets/images/persona.png"
               alt="Perfil"
               class="align-right"
+              @click="redirectToUserConfig"
             />
           </button>
         </div>
@@ -30,6 +31,7 @@
               src="@/assets/images/home.png"
               alt="Perfil"
               class="align-right"
+              @click="redirectToMarket"
             />
           </button>
         </div>
@@ -56,7 +58,14 @@
 <script>
 export default {
   name: "NavbarMarket",
-  methods: {},
+  methods: {
+    redirectToUserConfig() {
+      this.$router.push({ name: "userconfig" });
+    },
+    redirectToMarket() {
+      this.$router.push({ name: "market" });
+    },
+  },
 };
 </script>
 
