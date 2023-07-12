@@ -5,6 +5,7 @@ let token = localStorage.getItem("token");
 let decodedToken = jwtDecode(token).user_created_id;
 
 const user_path = "http://127.0.0.1:5002/posts/" + decodedToken;
+const BASE_URL = "http://127.0.0.1:5002/posts";
 
 let encabezado = {
   "Content-Type": "application/json",
@@ -17,6 +18,18 @@ export const registerPost = async (postskin) => {
     const response = await axios.post(user_path, postskin, {
       headers: encabezado,
     });
+    const data = response.data;
+    console.log("data: ", data);
+    return data;
+  } catch (error) {
+    console.log("error: ", error);
+    throw error;
+  }
+};
+
+export const getPosts = async () => {
+  try {
+    const response = await axios.get(BASE_URL, { headers: encabezado });
     const data = response.data;
     console.log("data: ", data);
     return data;

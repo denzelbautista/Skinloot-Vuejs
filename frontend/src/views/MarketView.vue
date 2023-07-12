@@ -63,16 +63,19 @@
         </div>
       </div>
     </div>
+    <post-skins></post-skins>
   </div>
 </template>
 
 <script scooped>
 import NavbarMarket from "@/components/NavbarMarket.vue";
+import PostSkins from "@/components/ShowPosts.vue";
 
 export default {
   name: "MarketView",
   components: {
     NavbarMarket,
+    PostSkins,
   },
   data() {
     return {

@@ -141,6 +141,16 @@ def create_app(test_config=None):
             return jsonify({'success': True, 'serialized': posts_serialized})
         except Exception as e:
             return jsonify({'success': False, 'error': str(e)})
+        
+    @app.route('/posts', methods=['GET'])
+    @authorize
+    def postsventa():
+        try:
+            posts = Postventa.query.all()
+            posts_serialized = [post.serialize() for post in posts]
+            return jsonify({'success': True, 'serialized': posts_serialized})
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)})
 
     @app.route('/skins', methods=['GET'])
     def get_all_db_skins():
