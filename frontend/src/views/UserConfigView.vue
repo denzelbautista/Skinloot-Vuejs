@@ -52,6 +52,7 @@
 </template>
 
 <script scooped>
+// no tocar
 import NavbarMarket from "@/components/NavbarMarket.vue";
 
 export default {
