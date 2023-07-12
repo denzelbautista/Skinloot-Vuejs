@@ -8,12 +8,11 @@
         <div v-for="skin in skins" :key="skin.id" class="col-md-4">
           <!-- Usar la clase skin-box para darle estilo a la skin -->
           <div class="skin-box">
-            <img :src="skin.skin_image" alt="Skin image" />
+            <img :src="`/${skin.champion}${skin.name}`" alt="Skin image" />
             <h3>{{ skin.name }}</h3>
             <p>{{ skin.champion }}</p>
             <p>{{ skin.rarity }}</p>
             <!-- Añadir un botón para comprar la skin -->
-            <button class="buy-button">Buy</button>
           </div>
         </div>
       </div>
@@ -37,6 +36,7 @@ export default {
     async loadSkins() {
       const { serialize } = await getSkinsUser();
       this.skins = serialize;
+      console.log("skins:", serialize.image);
     },
   },
   created() {
@@ -48,7 +48,7 @@ export default {
 <style>
 /* Usar el css que me has dado */
 .skin-box {
-  background-color: #1f1d1d;
+  background-color: #9e4949;
   border-radius: 10px;
   margin-bottom: 50px;
   padding: 20px;

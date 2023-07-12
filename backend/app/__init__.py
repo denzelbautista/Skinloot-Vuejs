@@ -15,7 +15,11 @@ import os
 import sys
 
 
+<<<<<<< HEAD
 openai.api_key = "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"
+=======
+openai.api_key = "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"
+>>>>>>> 16cf2e6262842fa2677cf31c6a26647438d941e8
 
 
 def create_app(test_config=None):
@@ -140,11 +144,12 @@ def create_app(test_config=None):
                 with open(filepath, 'a') as file:
                     file.write(str(uid) + '\n')
                 file.close()
-
+                skin.image = os.path.join("static/campeones",f'{champion_name}',f'{name}.jpg')  
                 db.session.commit()
                 db.session.close()
                 skin = db.session.merge(skin)
                 skin.serialize()
+                
 
         except Exception as e:
             print(e)
