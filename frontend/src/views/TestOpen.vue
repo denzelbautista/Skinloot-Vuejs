@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="Asistente">
     <h1>Preguntale a nuestro asistente</h1>
-    <form @submit.prevent.stop="submitMessage">
+    <form @submit.prevent.stop="submitMessage" class="skin-box">
       <label for="message">Quieres saber algo de un campeon?:</label>
       <input id="message" v-model="ups.message" />
       <div>
@@ -12,11 +12,11 @@
           <option value="Shen">Shen</option>
         </select>
       </div>
-      <button type="submit">Enviar</button>
+      <button type="submit" class="buy-button">Enviar</button>
     </form>
-    <div v-if="response">
+    <div v-if="response" class="skin-box">
       <p>
-        Esta es la corrección de GPT-3 y el comentario sobre
+        Respuesta de nuestro asistente
         {{ champion_name }}:
       </p>
       <p>{{ response }}</p>
@@ -47,3 +47,46 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.Asistente {
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 20px;
+  height: 96.7vh;
+}
+.skin-box {
+  background-color: #7f2626;
+  border-radius: 10px;
+  margin-bottom: 50px;
+  padding: 20px;
+  text-align: center;
+}
+
+.skin-box img {
+  max-width: 100%;
+  height: 200px;
+  object-fit: contain;
+}
+
+.skin-box h3 {
+  font-size: 24px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.buy-button {
+  background-color: #1e1818;
+  border: none;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.buy-button:hover {
+  background-color: #330f0f;
+}
+</style>

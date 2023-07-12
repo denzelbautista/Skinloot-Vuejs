@@ -15,7 +15,7 @@ import os
 import sys
 
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 
 def create_app(test_config=None):
