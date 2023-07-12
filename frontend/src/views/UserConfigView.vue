@@ -40,8 +40,10 @@
         <button type="submit" class="btn btn-primary button">
           Guardar Cambios
         </button>
-        <a href="/logout" id="logout-link" class="button">Cerrar sesión</a>
       </form>
+      <button class="btn btn-secondary button" @click="LogoutUser">
+        Cerrar Sesión
+      </button>
       <button class="btn btn-secondary button">Ver Skins</button>
       <button class="btn btn-secondary button">Agregar Skins</button>
     </div>
@@ -56,8 +58,16 @@ export default {
   components: {
     NavbarMarket,
   },
-  data() {},
-  methods: {},
+  data() {
+    return {};
+  },
+  methods: {
+    LogoutUser() {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      this.$router.push({ name: "home" });
+    },
+  },
 };
 </script>
 

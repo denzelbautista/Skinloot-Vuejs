@@ -50,6 +50,9 @@
 <script>
 export default {
   name: "HomePage",
+  data() {
+    return {};
+  },
   methods: {
     redirectToRegister() {
       this.$router.push({ name: "register" });
