@@ -32,7 +32,6 @@
       <button class="submit-button" type="submit">Submit</button>
     </form>
   </div>
-  <p>El token es: {{ token }}</p>
 </template>
 
 <script>
