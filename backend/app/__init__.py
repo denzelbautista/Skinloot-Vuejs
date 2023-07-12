@@ -15,7 +15,7 @@ import os
 import sys
 
 
-openai.api_key = "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"
+openai.api_key = "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"
 
 
 def create_app(test_config=None):
@@ -69,16 +69,18 @@ def create_app(test_config=None):
         returned_code = 201
         list_errors = []
         try:
-            # get the message from the vue form
-            message = request.get_json()
+            # get the message and the champion name from the vue form
+            data = request.json
+            message = data.get('message')
+            champion_name = data.get('champion_name')
             # create a prompt for GPT-3
-            prompt = f"Keep the conversation:\n\n{message}"
+            prompt = f"You'll be a league of legends expert. You'll be given a champion name from league of legends and a message, just do reply with the context of the message with an eloquent toneand in spanish. Here is your champion and message: {champion_name} and {message} , Now, reply with the context of the message: Well,  "
             # call the GPT-3 API with the prompt
             response = openai.Completion.create(
             model="text-davinci-003",
             prompt=prompt,
-            temperature=0,
-            max_tokens=60,
+            temperature=0.2,
+            max_tokens=400,
             top_p=1.0,
             frequency_penalty=0.0,
             presence_penalty=0.0
@@ -94,7 +96,8 @@ def create_app(test_config=None):
                 abort(returned_code)
             else:
                 # return the response as a json object
-                return jsonify({'response': response})
+                return jsonify({'response': response, 'prompt': message, 'success': True, 'message': 'message processed successfully!'}), returned_code
+
     
     
     @app.route('/skins', methods=['POST'])
