@@ -30,12 +30,14 @@
         <button class="submit-button" type="submit">Submit</button>
       </form>
     </div>
+    <user-skins></user-skins>
   </div>
 </template>
 
 <script>
 import { registerPost } from "@/services/userpost.api";
 import { getSkinsUser } from "@/services/userskins.api";
+import UserSkins from "@/components/ShowSkinsUser.vue";
 export default {
   name: "RegisterUserPost",
   mounted() {
@@ -63,5 +65,6 @@ export default {
       await registerPost(this.post, this.token);
     },
   },
+  components: { UserSkins },
 };
 </script>
