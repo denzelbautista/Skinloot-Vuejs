@@ -40,7 +40,7 @@
         <button type="submit" class="btn btn-primary button">
           Guardar Cambios
         </button>
-        <a href="/logout" id="logout-link" class="button">Cerrar sesión</a>
+        <a href="/" id="logout-link" class="button">Cerrar sesión</a>
       </form>
       <button class="btn btn-secondary button">Ver Skins</button>
       <button class="btn btn-secondary button">Agregar Skins</button>
