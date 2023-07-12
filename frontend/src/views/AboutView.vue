@@ -32,14 +32,20 @@
       <button class="submit-button" type="submit">Submit</button>
     </form>
   </div>
+  <p>El token es: {{ token }}</p>
 </template>
 
 <script>
 import { registerSkin } from "@/services/userskins.api";
-//import { getToken } from "@/services/users.api";
 
 export default {
   name: "RegisterUserSkin",
+  computed: {
+    token() {
+      // Lee el token del local storage y lo devuelve
+      return localStorage.getItem("token");
+    },
+  },
   data() {
     return {
       skin: {
@@ -48,13 +54,13 @@ export default {
         rarity: "",
         user_id: "", // Aquí se asignará el ID del usuario registrado
       },
-      token: "", // Variable para almacenar el token
     };
   },
   methods: {
     async AddSkinEvent() {
       await registerSkin(this.skin, this.token);
       console.log("data:", this.skin);
+      console.log("token:", this.token);
     },
   },
 };

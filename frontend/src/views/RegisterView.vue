@@ -46,7 +46,11 @@ export default {
   },
   methods: {
     async registerUserEvent() {
-      await registerUser(this.user);
+      const data = await registerUser(this.user);
+      // Guarda el token y el usuario en el local storage
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
       this.$router.push({ name: "market" });
     },
   },
