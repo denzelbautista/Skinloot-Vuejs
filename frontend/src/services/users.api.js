@@ -19,19 +19,3 @@ export const registerUser = async (user) => {
     throw error;
   }
 };
-
-export const getUserData = async (userId, token) => {
-  try {
-    const response = await axios.get(`${BASE_URL}/${userId}`, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-ACCESS-TOKEN": token,
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    console.log("Error:", error);
-    throw error;
-  }
-};

@@ -1,8 +1,8 @@
 <template>
-  <div class="register-view">
-    <h1 class="title">Register</h1>
+  <div class="login-view">
+    <h1 class="title">Login</h1>
     <div class="form-container">
-      <form class="registration-form" @submit.prevent.stop="registerUserEvent">
+      <form class="login-form" @submit.prevent.stop="loginUserEvent">
         <div class="form-group">
           <label for="username">Username:</label>
           <input type="text" id="username" v-model="user.nickname" />
@@ -15,14 +15,6 @@
           <label for="password">Password:</label>
           <input type="password" id="password" v-model="user.password" />
         </div>
-        <div class="form-group">
-          <label for="confirm-password">Confirmation Password:</label>
-          <input
-            type="password"
-            id="confirm-password"
-            v-model="user.confirmationPassword"
-          />
-        </div>
         <button class="submit-button" type="submit">Submit</button>
       </form>
     </div>
@@ -30,27 +22,21 @@
 </template>
 
 <script>
-import { registerUser } from "@/services/users.api";
-
+import { loginUser } from "@/services/loginuser.api";
 export default {
-  name: "RegisterView",
+  name: "LoginView",
   data() {
     return {
       user: {
         nickname: "",
         e_mail: "",
         password: "",
-        confirmationPassword: "",
       },
     };
   },
   methods: {
-    async registerUserEvent() {
-      const data = await registerUser(this.user);
-      // Guarda el token y el usuario en el local storage
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
+    async loginUserEvent() {
+      await loginUser(this.user);
       this.$router.push({ name: "market" });
     },
   },
@@ -58,7 +44,7 @@ export default {
 </script>
 
 <style scoped>
-.register-view {
+.login-view {
   background: url("https://media.giphy.com/media/U8VG8SfKICqkPjq4Sl/giphy.gif")
       no-repeat 90% center fixed,
     url("https://media.giphy.com/media/U8VG8SfKICqkPjq4Sl/giphy.gif") no-repeat
@@ -87,7 +73,7 @@ export default {
   width: 30%; /* Ajusta el ancho del formulario según tus preferencias */
 }
 
-.registration-form {
+.login-form {
   display: flex;
   flex-direction: column;
 }
@@ -95,7 +81,7 @@ export default {
 .form-group {
   margin-bottom: 20px;
 }
-.registration-form label {
+.login-form label {
   margin-bottom: 10px;
   color: rgb(207, 0, 0); /* los nicks y eso*/
   font-weight: bold;

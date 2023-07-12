@@ -1,13 +1,15 @@
 from flask import (Flask, request, jsonify, abort)
-from .models import db, setup_db, Skin, User, Postventa, Transaccion, Trade
+from .models import db, setup_db, Skin, User, Postventa, Transaccion
 from flask_cors import CORS
 from config.local import config
 from .utilities import allowed_file
 from datetime import datetime
 from .users_controller import users_bp
 from .authentication import authorize
+from werkzeug.security import check_password_hash
 
 
+import jwt
 import os
 import sys
 
@@ -27,6 +29,36 @@ def create_app(test_config=None):
                              'GET,PATCH,POST,DELETE,OPTIONS')
         response.headers.add('Access-Control-Max-Age', '10')
         return response
+    
+    @app.route('/login', methods=['POST'])
+    def login():
+        body = request.json
+        if 'nickname' not in body:
+            return jsonify({'success': False, 'message': 'nickname is required'}), 400
+        if 'e_mail' not in body:
+            return jsonify({'success': False, 'message': 'email is required'}), 400
+        if 'password' not in body:
+            return jsonify({'success': False, 'message': 'password is required'}), 400
+
+        nickname = body.get('nickname')
+        email = body.get('e_mail')
+        password = body.get('password')
+
+        user = User.query.filter_by(nickname=nickname, e_mail=email).first()
+
+        if not user:
+            return jsonify({'success': False, 'message': 'user not found'}), 404
+
+        if not user.verify_password(password):
+            return jsonify({'success': False, 'message': 'invalid password'}), 401
+
+        token = jwt.encode({
+            'user_created_id': user.id,
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+        }, config['SECRET_KEY'], config['ALGORITHM'])
+
+        return jsonify({'success': True, 'token': token, 'user': user.serialize()}), 200
+
 
     @app.route('/skins', methods=['POST'])
     @authorize
@@ -35,6 +67,7 @@ def create_app(test_config=None):
         list_errors = []
         try:
             body = request.json
+
             if 'name' not in body:
                 list_errors.append('name is required')
             else:
@@ -100,10 +133,18 @@ def create_app(test_config=None):
             return jsonify({'success': False, "error": str(e)})
 
     @app.route('/show-posts', methods=['GET'])
-    @authorize
     def showPosts():
         try:
             posts = Postventa.query.filter_by(on_sale=True).all()
+            posts_serialized = [post.serialize() for post in posts]
+            return jsonify({'success': True, 'serialized': posts_serialized})
+        except Exception as e:
+            return jsonify({'success': False, 'error': str(e)})
+        
+    @app.route('/posts', methods=['GET'])
+    def postsventa():
+        try:
+            posts = Postventa.query.all()
             posts_serialized = [post.serialize() for post in posts]
             return jsonify({'success': True, 'serialized': posts_serialized})
         except Exception as e:

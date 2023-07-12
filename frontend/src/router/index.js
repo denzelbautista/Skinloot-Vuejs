@@ -1,26 +1,53 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
+import HomePage from "../views/HomePage.vue";
+import MarketView from "../views/MarketView.vue";
 
 const routes = [
   {
-    path: "/",
-    name: "home",
-    component: HomeView,
-  },
-  {
-    path: "/about",
-    name: "about",
+    path: "/register",
+    name: "register",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+      import(/* webpackChunkName: "register" */ "../views/RegisterView.vue"),
   },
   {
-    path: "/register",
-    name: "register",
+    path: "/about",
+    name: "about",
     component: () =>
-      import(/* webpackChunkName: "register" */ "../views/RegisterView.vue"),
+      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+  },
+
+  {
+    path: "/login",
+    name: "login",
+    component: () =>
+      import(/* webpackChunkName: "login" */ "../views/LoginView.vue"),
+  },
+  {
+    path: "/market",
+    name: "market",
+    component: MarketView,
+  },
+  {
+    path: "/userconfig",
+    name: "userconfig",
+    component: () =>
+      import(
+        /* webpackChunkName: "userconfig" */ "../views/UserConfigView.vue"
+      ),
+  },
+  {
+    path: "/postskin",
+    name: "postskin",
+    component: () =>
+      import(/* webpackChunkName: "userconfig" */ "../views/PostSkinView.vue"),
+  },
+  {
+    path: "/",
+    name: "home",
+    component: HomePage,
   },
 ];
 

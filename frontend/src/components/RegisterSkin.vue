@@ -35,6 +35,8 @@
 
 <script>
 import { registerSkin } from "@/services/userskins.api";
+// import { getToken } from "@/services/users.api";
+
 export default {
   name: "RegisterUserSkin",
   data() {
@@ -43,20 +45,31 @@ export default {
         name: "",
         champion_name: "",
         rarity: "",
-        user_id: "", // Se almacenará el ID del usuario aquí
+        user_id: "", // Aquí se asignará el ID del usuario registrado
       },
-      token: null, // Variable para almacenar el token
+      token: "", // Variable para almacenar el token
     };
   },
   methods: {
     async AddSkinEvent() {
       try {
-        await registerSkin(this.skin);
-        console.log("Datos de la skin:", this.skin);
+        // Aquí puedes obtener el ID del usuario de alguna manera
+        // const userId = "..."; // Obtén el ID del usuario registrado
+
+        // Asigna el ID del usuario a la propiedad user_id de la skin
+        // this.skin.user_id = userId;
+
+        // Obtén el token de autenticación
+        // this.token = getToken(); // Asegúrate de implementar la función `getToken()` en users.api.js
+
+        // Llama a la función de registro de skin pasando los datos de la skin y el token
+        console.log("data:", this.skin);
+        await registerSkin(this.skin, this.token);
+
         console.log("Skin registrado exitosamente");
       } catch (error) {
+        console.log("data:", this.skin);
         console.log("Error:", error);
-        console.log("Datos de la skin:", this.skin);
       }
     },
   },
