@@ -42,6 +42,9 @@
         </button>
         <a href="/logout" id="logout-link" class="button">Cerrar sesión</a>
       </form>
+      <button class="btn btn-secondary button" @click="Logout">
+        Cerrar Sesión
+      </button>
       <button class="btn btn-secondary button">Ver Skins</button>
       <button class="btn btn-secondary button">Agregar Skins</button>
     </div>
@@ -57,7 +60,12 @@ export default {
     NavbarMarket,
   },
   data() {},
-  methods: {},
+  methods: {
+    Logout() {
+      localStorage.removeItem("token");
+      this.$router.push({ name: "home" });
+    },
+  },
 };
 </script>
 

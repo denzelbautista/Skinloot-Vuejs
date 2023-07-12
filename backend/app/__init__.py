@@ -140,11 +140,12 @@ def create_app(test_config=None):
                 with open(filepath, 'a') as file:
                     file.write(str(uid) + '\n')
                 file.close()
-
+                skin.image = os.path.join("static/campeones",f'{champion_name}',f'{name}.jpg')  
                 db.session.commit()
                 db.session.close()
                 skin = db.session.merge(skin)
                 skin.serialize()
+                
 
         except Exception as e:
             print(e)

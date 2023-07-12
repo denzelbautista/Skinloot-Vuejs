@@ -8,7 +8,7 @@
         <div v-for="skin in skins" :key="skin.id" class="col-md-4">
           <!-- Usar la clase skin-box para darle estilo a la skin -->
           <div class="skin-box">
-            <img :src="skin.skin_image" alt="Skin image" />
+            <img :src="`/${skin.champion}${skin.name}`" alt="Skin image" />
             <h3>{{ skin.name }}</h3>
             <p>{{ skin.champion }}</p>
             <p>{{ skin.rarity }}</p>
@@ -37,6 +37,7 @@ export default {
     async loadSkins() {
       const { serialize } = await getSkinsUser();
       this.skins = serialize;
+      console.log("skins:", serialize.image);
     },
   },
   created() {
