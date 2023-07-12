@@ -58,17 +58,43 @@ Para la Base de datos de Skinloot, se utilizará lo siguiente:
 # Structure Project
 
 - backend
-  - app/ + **init**.py
-  - models.py
-  - controller.py
-  - service.py
-    - confi/
-      - local.py
-      - qa.py
-      - ingtegration.py
-      - production.py
-  - tests/
-    - test_controller.py
-    - test_service.py
-   
--frontend 
+  - app/
+    - **init**.py
+    - **authentication**.py
+    - **models**.py
+    - **users_controllers**.py
+  - config/
+    - **local**.py
+    - **qa**.py
+  - AppTests.py
+  - static/
+    - images
+
+- frontend
+  - src/
+    - assets/
+      - imagenes
+      - logo
+  - components/
+    - NavbarMarket.vue
+    - RegisterSkin.vue
+    - ShowPosts.vue
+    - ShowSkins.vue
+    - TestOpen.vue
+  - router/
+    - index.js
+  - services
+    - loginuser.api.js
+    - openai.api.js
+    - userpost.api.js
+    - users.api.js
+    - userskins.api.js
+  - views
+    - AboutView.vue
+    - HomePage.vue
+    - LoginView.vue
+    - MarketView.vue
+    - PostSkinView.vue
+    - RegisterView.vue
+    - UserConfigView.vue
+  - App.vue
