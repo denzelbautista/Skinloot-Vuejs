@@ -36,8 +36,8 @@ export default {
   },
   methods: {
     async loadPosts() {
-      const { serialize } = await getPosts();
-      this.posts = serialize;
+      const { serialized } = await getPosts();
+      this.posts = serialized;
     },
   },
   created() {

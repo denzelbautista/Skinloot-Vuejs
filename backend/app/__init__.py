@@ -133,7 +133,6 @@ def create_app(test_config=None):
             return jsonify({'success': False, "error": str(e)})
 
     @app.route('/show-posts', methods=['GET'])
-    @authorize
     def showPosts():
         try:
             posts = Postventa.query.filter_by(on_sale=True).all()
@@ -143,7 +142,6 @@ def create_app(test_config=None):
             return jsonify({'success': False, 'error': str(e)})
         
     @app.route('/posts', methods=['GET'])
-    @authorize
     def postsventa():
         try:
             posts = Postventa.query.all()
