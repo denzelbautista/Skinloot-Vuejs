@@ -40,8 +40,10 @@
         <button type="submit" class="btn btn-primary button">
           Guardar Cambios
         </button>
-        <a href="/" id="logout-link" class="button">Cerrar sesión</a>
       </form>
+      <button class="btn btn-secondary button" @click="Logout">
+        Cerrar Sesión
+      </button>
       <button class="btn btn-secondary button">Ver Skins</button>
       <button class="btn btn-secondary button">Agregar Skins</button>
     </div>
@@ -53,11 +55,18 @@ import NavbarMarket from "@/components/NavbarMarket.vue";
 
 export default {
   name: "UserConfigView",
+  data() {
+    return {};
+  },
   components: {
     NavbarMarket,
   },
-  data() {},
-  methods: {},
+  methods: {
+    Logout() {
+      this.$router.push({ name: "home" });
+      localStorage.removeItem("token");
+    },
+  },
 };
 </script>
 

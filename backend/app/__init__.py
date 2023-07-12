@@ -3,7 +3,7 @@ from .models import db, setup_db, Skin, User, Postventa, Transaccion
 from flask_cors import CORS
 from config.local import config
 from .utilities import allowed_file
-from datetime import datetime
+import datetime
 from .users_controller import users_bp
 from .authentication import authorize
 from werkzeug.security import check_password_hash
@@ -55,7 +55,7 @@ def create_app(test_config=None):
         token = jwt.encode({
             'user_created_id': user.id,
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
-        }, config['SECRET_KEY'], config['ALGORITHM'])
+        }, config['SECRET_KEY'], config['ALGORYTHM'])
 
         return jsonify({'success': True, 'token': token, 'user': user.serialize()}), 200
 

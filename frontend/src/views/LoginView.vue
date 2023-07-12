@@ -36,7 +36,9 @@ export default {
   },
   methods: {
     async loginUserEvent() {
-      await loginUser(this.user);
+      const data = await loginUser(this.user);
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
       this.$router.push({ name: "market" });
     },
   },
