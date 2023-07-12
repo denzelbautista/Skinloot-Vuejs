@@ -3,7 +3,11 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-auto">
-          <button class="btn btn-outline-danger custom-button" type="button">
+          <button
+            class="btn btn-outline-danger custom-button"
+            type="button"
+            @click="redirectToPostSkin"
+          >
             Post
           </button>
         </div>
@@ -64,6 +68,9 @@ export default {
     },
     redirectToMarket() {
       this.$router.push({ name: "market" });
+    },
+    redirectToPostSkin() {
+      this.$router.push({ name: "postskin" });
     },
   },
 };

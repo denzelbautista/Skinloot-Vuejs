@@ -39,6 +39,12 @@ const routes = [
       ),
   },
   {
+    path: "/postskin",
+    name: "postskin",
+    component: () =>
+      import(/* webpackChunkName: "userconfig" */ "../views/PostSkinView.vue"),
+  },
+  {
     path: "/",
     name: "home",
     component: HomePage,
