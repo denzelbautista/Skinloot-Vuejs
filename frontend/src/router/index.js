@@ -45,12 +45,6 @@ const routes = [
       import(/* webpackChunkName: "userconfig" */ "../views/PostSkinView.vue"),
   },
   {
-    path: "/openai",
-    name: "openai",
-    component: () =>
-      import(/* webpackChunkName: "userconfig" */ "../views/TestOpen.vue"),
-  },
-  {
     path: "/",
     name: "home",
     component: HomePage,

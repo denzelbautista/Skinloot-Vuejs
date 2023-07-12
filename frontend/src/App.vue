@@ -4,7 +4,6 @@
     <router-link to="/register">Register</router-link> |
     <router-link to="/userconfig">Config</router-link> |
     <router-link to="/about">registerskin</router-link> |
-    <router-link to="/openai">OpenAI</router-link>
 
     <router-view />
   </div>

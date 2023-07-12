@@ -53,7 +53,6 @@ export default {
   margin: 0 auto;
   max-width: 800px;
   padding: 20px;
-  height: 96.7vh;
 }
 .skin-box {
   background-color: #7f2626;
