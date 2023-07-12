@@ -13,7 +13,6 @@
             <p>{{ skin.champion }}</p>
             <p>{{ skin.rarity }}</p>
             <!-- Añadir un botón para comprar la skin -->
-            <button class="buy-button">Buy</button>
           </div>
         </div>
       </div>
@@ -49,7 +48,7 @@ export default {
 <style>
 /* Usar el css que me has dado */
 .skin-box {
-  background-color: #1f1d1d;
+  background-color: #9e4949;
   border-radius: 10px;
   margin-bottom: 50px;
   padding: 20px;

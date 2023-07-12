@@ -14,7 +14,7 @@
             <p>{{ post.precio }}</p>
             <p>{{ post.campeon }}</p>
             <!-- Añadir un botón para ver el post -->
-            <button class="view-button">View</button>
+            <button class="view-button">Buy</button>
           </div>
         </div>
       </div>
