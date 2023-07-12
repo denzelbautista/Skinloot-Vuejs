@@ -32,29 +32,37 @@
       <button class="submit-button" type="submit">Submit</button>
     </form>
   </div>
+  <p>El token es: {{ token }}</p>
 </template>
 
 <script>
 import { registerSkin } from "@/services/userskins.api";
-//import { getToken } from "@/services/users.api";
-
+import jwtDecode from "jwt-decode";
 export default {
   name: "RegisterUserSkin",
+  computed: {
+    token() {
+      // Lee el token del local storage y lo devuelve
+      let tokenized = localStorage.getItem("token");
+      return jwtDecode(tokenized).user_created_id;
+    },
+  },
   data() {
     return {
       skin: {
         name: "",
         champion_name: "",
         rarity: "",
-        user_id: "", // Aquí se asignará el ID del usuario registrado
+        user_id: null, // Aquí se asignará el ID del usuario registrado
       },
-      token: "", // Variable para almacenar el token
     };
   },
   methods: {
     async AddSkinEvent() {
+      this.skin.user_id = this.token;
       await registerSkin(this.skin, this.token);
       console.log("data:", this.skin);
+      console.log("token:", this.token);
     },
   },
 };

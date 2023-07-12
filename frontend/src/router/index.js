@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../views/HomePage.vue";
 import MarketView from "../views/MarketView.vue";
+import RegisterUserSkin from "../views/AboutView.vue";
 
 const routes = [
   {
@@ -13,10 +14,9 @@ const routes = [
       import(/* webpackChunkName: "register" */ "../views/RegisterView.vue"),
   },
   {
-    path: "/login",
-    name: "login",
-    component: () =>
-      import(/* webpackChunkName: "login" */ "../views/LoginView.vue"),
+    path: "/about",
+    name: "about",
+    component: RegisterUserSkin,
   },
   {
     path: "/market",

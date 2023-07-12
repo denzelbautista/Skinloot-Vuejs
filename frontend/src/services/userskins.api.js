@@ -1,17 +1,18 @@
 import axios from "axios";
+//import jwtDecode from "jwt-decode";
 
 const BASE_URL = "http://127.0.0.1:5002/skins";
 
-// const token = localstorage.getItem("token");
-
-export const registerSkin = async (skin, token) => {
+let token = localStorage.getItem("token");
+//let decodedToken = jwtDecode(token).user_created_id;
+let encabezado = {
+  "Content-Type": "application/json",
+  "X-ACCESS-TOKEN": token,
+};
+export const registerSkin = async (skin) => {
   try {
-    const response = await axios.post(BASE_URL, skin, {
-      headers: {
-        "Content-Type": "application/json",
-        "X-ACCESS-TOKEN": token, // Agrega el token en el encabezado de la solicitud
-      },
-    });
+    // Agrega la propiedad headers al objeto del tercer argumento
+    const response = await axios.post(BASE_URL, skin, { headers: encabezado });
     const data = response.data;
     console.log("data: ", data);
     return data;
