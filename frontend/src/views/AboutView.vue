@@ -24,7 +24,7 @@
         <label>Rarity:</label>
         <select v-model="skin.rarity">
           <option value="Pro">Legendary</option>
-          <option value="Normal">Epic</option> 
+          <option value="Normal">Epic</option>
           <option value="Pobre">Normal</option>
         </select>
       </div>
@@ -37,13 +37,14 @@
 
 <script>
 import { registerSkin } from "@/services/userskins.api";
-// aiushhi
+import jwtDecode from "jwt-decode";
 export default {
   name: "RegisterUserSkin",
   computed: {
     token() {
       // Lee el token del local storage y lo devuelve
-      return localStorage.getItem("token");
+      let tokenized = localStorage.getItem("token");
+      return jwtDecode(tokenized).user_created_id;
     },
   },
   data() {
@@ -52,12 +53,13 @@ export default {
         name: "",
         champion_name: "",
         rarity: "",
-        user_id: "", // Aquí se asignará el ID del usuario registrado
+        user_id: null, // Aquí se asignará el ID del usuario registrado
       },
     };
   },
   methods: {
     async AddSkinEvent() {
+      this.skin.user_id = this.token;
       await registerSkin(this.skin, this.token);
       console.log("data:", this.skin);
       console.log("token:", this.token);
