@@ -2,6 +2,8 @@ import axios from "axios";
 
 const BASE_URL = "http://127.0.0.1:5002/skins";
 
+// const token = localstorage.getItem("token");
+
 export const registerSkin = async (skin, token) => {
   try {
     const response = await axios.post(BASE_URL, skin, {
