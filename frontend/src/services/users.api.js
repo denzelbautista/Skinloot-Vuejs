@@ -11,8 +11,6 @@ export const registerUser = async (user) => {
       console.log("token: ", data.token);
       console.log("id: ", data.id);
       return data;
-    } else {
-      throw new Error("Token not found in the response.");
     }
   } catch (error) {
     console.log("error here: ", error);

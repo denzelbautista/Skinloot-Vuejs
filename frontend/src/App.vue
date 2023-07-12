@@ -8,8 +8,14 @@
   </div>
 </template>
 
+<script>
+export default {
+  name: "App",
+};
+</script>
+
 <style>
 #app {
-  background-color: black;
+  background-color: white;
 }
 </style>

@@ -62,6 +62,9 @@
 <script>
 export default {
   name: "NavbarMarket",
+  data() {
+    return {};
+  },
   methods: {
     redirectToUserConfig() {
       this.$router.push({ name: "userconfig" });
