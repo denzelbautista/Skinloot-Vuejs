@@ -24,7 +24,7 @@
         <label>Rarity:</label>
         <select v-model="skin.rarity">
           <option value="Pro">Legendary</option>
-          <option value="Normal">Epic</option>
+          <option value="Normal">Epic</option> 
           <option value="Pobre">Normal</option>
         </select>
       </div>
@@ -37,7 +37,7 @@
 
 <script>
 import { registerSkin } from "@/services/userskins.api";
-
+// aiushhi
 export default {
   name: "RegisterUserSkin",
   computed: {
