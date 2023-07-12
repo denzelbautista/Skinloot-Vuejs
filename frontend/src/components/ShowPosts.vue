@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<script>
+<script scooped>
 import { getPosts } from "@/services/userpost.api";
 export default {
   name: "AllPosts",

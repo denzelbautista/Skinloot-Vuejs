@@ -78,9 +78,7 @@ export default {
     PostSkins,
   },
   data() {
-    return {
-      saldo: 0, // Asigna el valor adecuado para "saldo"
-    };
+    return {};
   },
   methods: {
     sortSkins() {

@@ -24,7 +24,7 @@
   </div>
 </template>
 
-<script>
+<script scooped>
 import { getSkinsUser } from "@/services/userskins.api";
 export default {
   name: "UserSkins",

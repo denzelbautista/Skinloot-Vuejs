@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script>
+<script scooped>
 import { registerPost } from "@/services/userpost.api";
 import { getSkinsUser } from "@/services/userskins.api";
 import UserSkins from "@/components/ShowSkinsUser.vue";

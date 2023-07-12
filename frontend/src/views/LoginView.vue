@@ -21,7 +21,7 @@
   </div>
 </template>
 
-<script>
+<script scooped>
 import { loginUser } from "@/services/loginuser.api";
 export default {
   name: "LoginView",

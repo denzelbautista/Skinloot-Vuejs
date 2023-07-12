@@ -59,9 +59,7 @@ export default {
   methods: {
     async AddSkinEvent() {
       this.skin.user_id = this.token;
-      await registerSkin(this.skin, this.token);
-      console.log("data:", this.skin);
-      console.log("token:", this.token);
+      await registerSkin(this.skin);
     },
   },
 };

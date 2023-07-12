@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script>
+<script scooped>
 import { registerUser } from "@/services/users.api";
 
 export default {
@@ -46,8 +46,6 @@ export default {
   },
   methods: {
     async registerUserEvent() {
-      // Borrar el token existente de localStorage
-
       const data = await registerUser(this.user);
       // Guarda el nuevo token y el usuario en el local storage
       localStorage.setItem("token", data.token);
