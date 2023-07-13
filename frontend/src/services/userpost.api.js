@@ -2,10 +2,11 @@ import axios from "axios";
 import jwtDecode from "jwt-decode";
 
 let token = localStorage.getItem("token");
-let decodedToken = jwtDecode(token).user_created_id;
 
-const user_path = "http://127.0.0.1:5002/posts/" + decodedToken;
 const BASE_URL = "http://127.0.0.1:5002/posts";
+
+const user_path =
+  "http://127.0.0.1:5002/posts/" + jwtDecode(token).user_created_id;
 
 let encabezado = {
   "Content-Type": "application/json",

@@ -46,8 +46,10 @@ export default {
   },
   methods: {
     async registerUserEvent() {
+      // Borrar el token existente de localStorage
+
       const data = await registerUser(this.user);
-      // Guarda el token y el usuario en el local storage
+      // Guarda el nuevo token y el usuario en el local storage
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
