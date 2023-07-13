@@ -11,6 +11,6 @@
 
 <style>
 #app {
-  background-color: black;
+  background-color: white;
 }
 </style>
