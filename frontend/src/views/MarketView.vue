@@ -62,6 +62,7 @@
           <div id="skins-container"></div>
         </div>
       </div>
+      <asistente></asistente>
     </div>
     <post-skins></post-skins>
   </div>
@@ -70,12 +71,14 @@
 <script scooped>
 import NavbarMarket from "@/components/NavbarMarket.vue";
 import PostSkins from "@/components/ShowPosts.vue";
+import Asistente from "@/components/TestOpen.vue";
 
 export default {
   name: "MarketView",
   components: {
     NavbarMarket,
     PostSkins,
+    Asistente,
   },
   data() {
     return {};

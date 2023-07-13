@@ -7,11 +7,15 @@ from datetime import datetime
 from .users_controller import users_bp
 from .authentication import authorize
 from werkzeug.security import check_password_hash
-
+import os
+import openai
 
 import jwt
 import os
 import sys
+
+
+openai.api_key = "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"
 
 
 def create_app(test_config=None):
@@ -60,6 +64,42 @@ def create_app(test_config=None):
         return jsonify({'success': True, 'token': token, 'user': user.serialize()}), 200
 
 
+    @app.route('/process_message', methods=['POST'])
+    def process_message():
+        returned_code = 201
+        list_errors = []
+        try:
+            # get the message and the champion name from the vue form
+            data = request.json
+            message = data.get('message')
+            champion_name = data.get('champion_name')
+            # create a prompt for GPT-3
+            prompt = f"You'll be a league of legends expert. You'll be given a champion name from league of legends and a message, just do reply with the context of the message with an eloquent toneand in spanish. Here is your champion and message: {champion_name} and {message} , Now, reply with the context of the message: Well,  "
+            # call the GPT-3 API with the prompt
+            response = openai.Completion.create(
+            model="text-davinci-003",
+            prompt=prompt,
+            temperature=0.2,
+            max_tokens=400,
+            top_p=1.0,
+            frequency_penalty=0.0,
+            presence_penalty=0.0
+            )
+            response = response['choices'][0]['text']
+        except Exception as e:
+            print(e)
+            print(sys.exc_info())
+            returned_code = 500
+
+        finally:
+            if returned_code == 500:
+                abort(returned_code)
+            else:
+                # return the response as a json object
+                return jsonify({'response': response, 'prompt': message, 'success': True, 'message': 'message processed successfully!'}), returned_code
+
+    
+    
     @app.route('/skins', methods=['POST'])
     @authorize
     def register_skins():
@@ -100,11 +140,12 @@ def create_app(test_config=None):
                 with open(filepath, 'a') as file:
                     file.write(str(uid) + '\n')
                 file.close()
-
+                skin.image = os.path.join("static/campeones",f'{champion_name}',f'{name}.jpg')  
                 db.session.commit()
                 db.session.close()
                 skin = db.session.merge(skin)
                 skin.serialize()
+                
 
         except Exception as e:
             print(e)
